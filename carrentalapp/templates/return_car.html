@@ -1,0 +1,10 @@
+<form method="post" action="{% url 'return_car' %}">
+    {% csrf_token %}
+    <label for="rental_id">Rental ID:</label>
+    <select name="rental_id">
+        {% for rental in rentals %}
+            <option value="{{ rental.id }}">{{ rental.car.model }} - {{ rental.user.username }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Return Car">
+</form>
