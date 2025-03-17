@@ -1,5 +1,12 @@
 from django import forms
 from .models import CarRental, CarReturn
+from django import forms
+from .models import CarRental
+
+class RentCarForm(forms.ModelForm):
+    class Meta:
+        model = CarRental
+        fields = ['car_model', 'duration', 'picture', 'amount_paid', 'fuel_used']
 
 class CarRentalForm(forms.ModelForm):
     class Meta:

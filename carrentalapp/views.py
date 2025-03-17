@@ -56,3 +56,5 @@ def return_car(request):
         form = CarReturnForm()
     rentals = CarRental.objects.filter(user=request.user)
     return render(request, 'return_car.html', {'form': form, 'rentals': rentals})
+    
+
