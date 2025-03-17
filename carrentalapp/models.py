@@ -31,22 +31,12 @@ class CarRental(models.Model):
     def __str__(self):
         return f"{self.car_model} rented by {self.user.username}"
 
-# class CarReturn(models.Model):
-#     rental = models.OneToOneField(CarRental, on_delete=models.CASCADE)
-#     return_date = models.DateTimeField(auto_now_add=True)
-#     car_picture = models.ImageField(upload_to='returned_cars/')
-#     condition = models.TextField()
-#     issues = models.TextField(blank=True, null=True)
-
-#     def __str__(self):
-#         return f"Return record for {self.rental.car_model}"
-# from django.db import models
-
 class CarReturn(models.Model):
-    return_date = models.DateTimeField()
-    car_picture = models.ImageField(upload_to='car_returns/')
-    condition = models.TextField(blank=True, null=True)
+    rental = models.OneToOneField(CarRental, on_delete=models.CASCADE)
+    return_date = models.DateTimeField(auto_now_add=True)
+    car_picture = models.ImageField(upload_to='returned_cars/')
+    condition = models.TextField()
     issues = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"Return on {self.return_date}"
+        return f"Return record for {self.rental.car_model}"

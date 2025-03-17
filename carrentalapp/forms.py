@@ -15,10 +15,9 @@ class CarRentalForm(forms.ModelForm):
 
 class CarReturnForm(forms.ModelForm):
     class Meta:
-        model = CarReturn  # Ensure this model exists
-        fields = ['return_date', 'car_picture', 'condition', 'issues']
+        model = CarReturn
+        fields = ['car_picture', 'condition', 'issues']
         widgets = {
-            'return_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
             'car_picture': forms.FileInput(attrs={'class': 'form-control'}),
             'condition': forms.Textarea(attrs={'class': 'form-control'}),
             'issues': forms.Textarea(attrs={'class': 'form-control'}),

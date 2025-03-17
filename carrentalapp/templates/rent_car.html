@@ -3,14 +3,7 @@
     <h2>Rent a Car</h2>
     <form method="POST" enctype="multipart/form-data" class="mt-3">
         {% csrf_token %}
-        <div class="mb-3">
-            {{ form.as_p }}
-        </div>
+        {{ form.as_p }}
         <button type="submit" class="btn btn-success">Rent Car</button>
     </form>
 {% endblock %}
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>

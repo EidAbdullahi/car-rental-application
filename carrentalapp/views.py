@@ -3,10 +3,11 @@ from django.contrib.auth.decorators import login_required
 from .models import CarRental, CarReturn
 from django.contrib.auth.models import User
 from .models import UserProfile
+from .forms import CarRentalForm, CarReturnForm
+
 
 def profile_view(request):
     return render(request, 'profile.html') 
-
 
 # Home Page
 def home(request):
@@ -25,47 +26,33 @@ def contact(request):
     return render(request, 'contact.html')
 
 # Car Rental Form (Booking a Car)
+
+
 @login_required
 def rent_car(request):
     if request.method == 'POST':
-        car_model = request.POST['car_model']
-        duration = request.POST['duration']
-        picture = request.FILES['picture']
-        amount_paid = request.POST['amount_paid']
-        fuel_used = request.POST['fuel_used']
+        form = CarRentalForm(request.POST, request.FILES)
+        if form.is_valid():
+            rental = form.save(commit=False)
+            rental.user = request.user
+            rental.save()
+            return redirect('home')
+    else:
+        form = CarRentalForm()
+    return render(request, 'rent_car.html', {'form': form})
 
-        rental = CarRental.objects.create(
-            user=request.user,
-            car_model=car_model,
-            duration=duration,
-            picture=picture,
-            amount_paid=amount_paid,
-            fuel_used=fuel_used
-        )
-        rental.save()
-        return redirect('home')
-
-    return render(request, 'rent_car.html')
-
-# Car Return Form (Returning a Car)
 @login_required
 def return_car(request):
     if request.method == 'POST':
-        rental_id = request.POST['rental_id']
-        car_picture = request.FILES['car_picture']
-        condition = request.POST['condition']
-        issues = request.POST.get('issues', '')
-
-        rental = CarRental.objects.get(id=rental_id, user=request.user)
-        car_return = CarReturn.objects.create(
-            rental=rental,
-            car_picture=car_picture,
-            condition=condition,
-            issues=issues
-        )
-        car_return.save()
-        return redirect('home')
-
+        form = CarReturnForm(request.POST, request.FILES)
+        if form.is_valid():
+            rental_id = request.POST['rental_id']
+            rental = CarRental.objects.get(id=rental_id, user=request.user)
+            car_return = form.save(commit=False)
+            car_return.rental = rental
+            car_return.save()
+            return redirect('home')
+    else:
+        form = CarReturnForm()
     rentals = CarRental.objects.filter(user=request.user)
-    return render(request, 'return_car.html', {'rentals': rentals})
-
+    return render(request, 'return_car.html', {'form': form, 'rentals': rentals})

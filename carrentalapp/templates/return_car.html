@@ -1,10 +1,15 @@
-<form method="post" action="{% url 'return_car' %}">
-    {% csrf_token %}
-    <label for="rental_id">Rental ID:</label>
-    <select name="rental_id">
-        {% for rental in rentals %}
-            <option value="{{ rental.id }}">{{ rental.car.model }} - {{ rental.user.username }}</option>
-        {% endfor %}
-    </select>
-    <input type="submit" value="Return Car">
-</form>
+{% extends "base.html" %}
+{% block content %}
+    <h2>Return a Car</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="rental_id">Select Rental:</label>
+        <select name="rental_id" class="form-control">
+            {% for rental in rentals %}
+                <option value="{{ rental.id }}">{{ rental.car_model }} - Rented by {{ rental.user.username }}</option>
+            {% endfor %}
+        </select>
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-danger">Return Car</button>
+    </form>
+{% endblock %}
